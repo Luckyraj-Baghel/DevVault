@@ -102,3 +102,20 @@ export const deleteNote = async (noteId, userId) => {
 
   return note;
 };
+
+export const togglePinNote = async (noteId, userId) => {
+  const note = await Note.findOne({
+    _id: noteId,
+    owner: userId,
+  });
+
+  if (!note) {
+    throw new Error("Note not found");
+  }
+
+  note.isPinned = !note.isPinned;
+
+  await note.save();
+
+  return note;
+};

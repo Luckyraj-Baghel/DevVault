@@ -4,6 +4,26 @@ import Snippet from "../snippets/snippet.model.js";
 import Bookmark from "../bookmarks/bookmark.model.js";
 
 export const getDashboardStats = async (userId) => {
+  const recentNotes = await Note.find({ owner: userId })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select("title category createdAt");
+
+  const recentProjects = await Project.find({ owner: userId })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select("title status createdAt");
+
+  const recentSnippets = await Snippet.find({ owner: userId })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select("title language createdAt");
+
+  const recentBookmarks = await Bookmark.find({ owner: userId })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select("title type createdAt");
+
   const [
     totalNotes,
     totalProjects,
@@ -58,6 +78,7 @@ export const getDashboardStats = async (userId) => {
   ]);
 
   return {
+  stats: {
     totalNotes,
     totalProjects,
     totalSnippets,
@@ -67,5 +88,11 @@ export const getDashboardStats = async (userId) => {
     favoriteBookmarks,
     completedProjects,
     inProgressProjects,
-  };
+  },
+
+  recentNotes,
+  recentProjects,
+  recentSnippets,
+  recentBookmarks,
+};
 };

@@ -4,6 +4,7 @@ import {
     getNoteById,
     updateNote,
     deleteNote,
+    togglePinNote,
 } from "./notes.service.js";
 
 export const create = async (req, res) => {
@@ -96,4 +97,26 @@ export const remove = async (req, res) => {
             message: error.message,
         });
     }
+};
+
+export const togglePin = async (req, res) => {
+  try {
+    const note = await togglePinNote(
+      req.params.id,
+      req.user.id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: note.isPinned
+        ? "Note pinned successfully"
+        : "Note unpinned successfully",
+      data: note,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
