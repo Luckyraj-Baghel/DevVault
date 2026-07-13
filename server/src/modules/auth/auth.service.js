@@ -69,11 +69,11 @@ export const loginUser = async ({ email, password }) => {
 };
 
 export const getCurrentUser = async (userId) => {
-  const user = await User.findById(userId);
+    const user = await User.findById(userId);
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+    if (!user) {
+        throw new Error("User not found");
+    }
 
-  return sanitizeUser(user);
+    return sanitizeUser(user);
 };

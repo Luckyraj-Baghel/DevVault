@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import EditNoteModal from "../components/notes/EditNoteModal";
+import toast from "react-hot-toast";
 
 import {
   getAllNotes,
@@ -46,9 +47,10 @@ const NotesPage = () => {
     try {
       await createNote(noteData);
       await fetchNotes();
+
+      toast.success("Note created successfully");
     } catch (error) {
-      console.log(error);
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Failed to create note"
       );
@@ -62,10 +64,9 @@ const NotesPage = () => {
       setNotes((prev) =>
         prev.filter((note) => note._id !== id)
       );
+      toast.success("Note deleted successfully");
     } catch (error) {
-      console.log(error);
-
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Failed to delete note"
       );
@@ -85,10 +86,9 @@ const NotesPage = () => {
       await updateNote(id, noteData);
 
       await fetchNotes();
+      toast.success("Note updated successfully");
     } catch (error) {
-      console.log(error);
-
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Failed to update note"
       );

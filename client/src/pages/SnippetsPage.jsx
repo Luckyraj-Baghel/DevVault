@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import SnippetCard from "../components/snippets/SnippetCard";
 import SnippetModal from "../components/snippets/SnippetModal";
+import toast from "react-hot-toast";
 
 import {
   getAllSnippets,
@@ -40,8 +41,14 @@ const SnippetsPage = () => {
         response.data,
         ...prev,
       ]);
+
+      toast.success("Snippet created successfully");
+
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to create snippet"
+      );
     }
   };
 
@@ -61,8 +68,14 @@ const SnippetsPage = () => {
       );
 
       setEditingSnippet(null);
+
+      toast.success("Snippet updated successfully");
+
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to update snippet"
+      );
     }
   };
 
@@ -75,8 +88,14 @@ const SnippetsPage = () => {
           (snippet) => snippet._id !== id
         )
       );
+
+      toast.success("Snippet deleted successfully");
+
     } catch (error) {
-      console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to delete snippet"
+      );
     }
   };
 

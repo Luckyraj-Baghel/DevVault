@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const ProjectModal = ({
+const BookmarkModal = ({
   isOpen,
   onClose,
   onSubmit,
@@ -8,31 +8,30 @@ const ProjectModal = ({
 }) => {
   const [formData, setFormData] = useState({
     title: "",
+    url: "",
+    type: "",
     description: "",
-    techStack: "",
-    githubLink: "",
-    liveLink: "",
-    status: "Planning",
+    tags: "",
   });
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         title: initialData.title || "",
-        description: initialData.description || "",
-        techStack: initialData.techStack?.join(", ") || "",
-        githubLink: initialData.githubLink || "",
-        liveLink: initialData.liveLink || "",
-        status: initialData.status || "Planning",
+        url: initialData.url || "",
+        type: initialData.type || "",
+        description:
+          initialData.description || "",
+        tags:
+          initialData.tags?.join(", ") || "",
       });
     } else {
       setFormData({
         title: "",
+        url: "",
+        type: "",
         description: "",
-        techStack: "",
-        githubLink: "",
-        liveLink: "",
-        status: "Planning",
+        tags: "",
       });
     }
   }, [initialData, isOpen]);
@@ -46,37 +45,29 @@ const ProjectModal = ({
     });
   };
 
-  const resetForm = () => {
-    setFormData({
-      title: "",
-      description: "",
-      techStack: "",
-      githubLink: "",
-      liveLink: "",
-      status: "Planning",
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    console.log(formData);
     onSubmit({
       ...formData,
-      techStack: formData.techStack
+      tags: formData.tags
         .split(",")
-        .map((tech) => tech.trim())
+        .map((tag) => tag.trim())
         .filter(Boolean),
     });
 
-    resetForm();
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4">
       <div className="bg-slate-900 rounded-3xl w-full max-w-2xl p-8 border border-slate-800">
+
         <h2 className="text-3xl font-bold text-white mb-8">
-          {initialData ? "Edit Project" : "New Project"}
+          {initialData
+            ? "Edit Bookmark"
+            : "New Bookmark"}
         </h2>
 
         <form
@@ -86,67 +77,84 @@ const ProjectModal = ({
           <input
             type="text"
             name="title"
-            placeholder="Project title"
+            placeholder="Bookmark title"
             value={formData.title}
             onChange={handleChange}
             className="w-full bg-slate-800 rounded-xl p-4 text-white"
             required
           />
 
-          <textarea
-            name="description"
-            placeholder="Project description"
-            value={formData.description}
+          <input
+            type="url"
+            name="url"
+            placeholder="https://..."
+            value={formData.url}
             onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white h-32"
+            className="w-full bg-slate-800 rounded-xl p-4 text-white"
             required
           />
 
-          <input
-            type="text"
-            name="techStack"
-            placeholder="React, Node.js, MongoDB"
-            value={formData.techStack}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-          />
-
-          <input
-            type="text"
-            name="githubLink"
-            placeholder="GitHub URL"
-            value={formData.githubLink}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-          />
-
-          <input
-            type="text"
-            name="liveLink"
-            placeholder="Live Demo URL"
-            value={formData.liveLink}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-          />
-
           <select
-            name="status"
-            value={formData.status}
+            name="type"
+            value={formData.type}
             onChange={handleChange}
             className="w-full bg-slate-800 rounded-xl p-4 text-white"
+            required
           >
-            <option>Planning</option>
-            <option>In Progress</option>
-            <option>Completed</option>
+            <option value="" disabled>
+              Select Bookmark Type
+            </option>
+
+            <option value="Documentation">
+              Documentation
+            </option>
+
+            <option value="GitHub">
+              GitHub
+            </option>
+
+            <option value="Video">
+              Video
+            </option>
+
+            <option value="Article">
+              Article
+            </option>
+
+            <option value="API">
+              API
+            </option>
+
+            <option value="Tool">
+              Tool
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
           </select>
 
-          <div className="flex justify-end gap-4 pt-4">
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full bg-slate-800 rounded-xl p-4 text-white h-24"
+          />
+
+          <input
+            type="text"
+            name="tags"
+            placeholder="react, api, auth"
+            value={formData.tags}
+            onChange={handleChange}
+            className="w-full bg-slate-800 rounded-xl p-4 text-white"
+          />
+
+          <div className="flex justify-end gap-4">
             <button
               type="button"
-              onClick={() => {
-                resetForm();
-                onClose();
-              }}
+              onClick={onClose}
               className="px-5 py-3 rounded-xl bg-slate-800 text-white"
             >
               Cancel
@@ -156,13 +164,14 @@ const ProjectModal = ({
               type="submit"
               className="px-5 py-3 rounded-xl bg-indigo-600 text-white"
             >
-              Save Project
+              Save Bookmark
             </button>
           </div>
         </form>
+
       </div>
     </div>
   );
 };
 
-export default ProjectModal;
+export default BookmarkModal;

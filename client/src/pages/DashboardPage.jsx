@@ -3,6 +3,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 import { getDashboardStats } from "../services/dashboard.service";
 import StatCard from "../components/dashboard/StatCard";
 import SectionCard from "../components/dashboard/SectionCard";
+import toast from "react-hot-toast";
 
 const DashboardPage = () => {
   const [stats, setStats] = useState(null);
@@ -116,7 +117,7 @@ const DashboardPage = () => {
         {/* Preview Sections */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-          <SectionCard title="Recent Notes">
+          <SectionCard title="Recent Notes" link="/notes">
             <div className="space-y-3">
               {recentNotes.length > 0 ? (
                 recentNotes.map((note) => (
@@ -141,7 +142,7 @@ const DashboardPage = () => {
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Projects">
+          <SectionCard title="Recent Projects" link="/projects">
             <div className="space-y-3">
               {recentProjects.length > 0 ? (
                 recentProjects.map((project) => (
@@ -166,7 +167,7 @@ const DashboardPage = () => {
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Snippets">
+          <SectionCard title="Recent Snippets" link="/snippets">
             <div className="space-y-3">
               {recentSnippets.length > 0 ? (
                 recentSnippets.map((snippet) => (
@@ -191,7 +192,7 @@ const DashboardPage = () => {
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Bookmarks">
+          <SectionCard title="Recent Bookmarks" link="/bookmarks">
             <div className="space-y-3">
               {recentBookmarks.length > 0 ? (
                 recentBookmarks.map((bookmark) => (

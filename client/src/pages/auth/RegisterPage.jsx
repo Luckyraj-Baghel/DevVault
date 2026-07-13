@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
 
@@ -25,18 +26,14 @@ const RegisterPage = () => {
         try {
             const response = await registerUser(formData);
 
-            console.log(response);
-
-            alert("Registration successful! Please login.");
+            toast.success("Registration successfull! please login.");
 
             navigate("/login");
 
         } catch (error) {
-            console.log(error);
-
-            alert(
+            toast.error(
                 error.response?.data?.message ||
-                "Registration failed"
+                "Registration Failed"
             );
         }
     };

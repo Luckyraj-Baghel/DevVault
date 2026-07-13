@@ -1,4 +1,10 @@
-const SectionCard = ({ title, children }) => {
+import { Link } from "react-router-dom";
+
+const SectionCard = ({
+  title,
+  children,
+  link,
+}) => {
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
       <div className="flex items-center justify-between mb-5">
@@ -6,9 +12,12 @@ const SectionCard = ({ title, children }) => {
           {title}
         </h2>
 
-        <button className="text-indigo-400 hover:text-indigo-300 text-sm transition">
+        <Link
+          to={link}
+          className="text-indigo-400 hover:text-indigo-300 text-sm transition"
+        >
           View All →
-        </button>
+        </Link>
       </div>
 
       {children}

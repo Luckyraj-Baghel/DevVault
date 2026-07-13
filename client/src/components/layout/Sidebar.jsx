@@ -24,6 +24,10 @@ const Sidebar = () => {
       name: "Bookmarks",
       path: "/bookmarks",
     },
+    {
+      name: "Profile",
+      path: "/profile",
+    },
   ];
 
   return (
@@ -37,11 +41,10 @@ const Sidebar = () => {
           <Link
             key={item.name}
             to={item.path}
-            className={`block w-full text-left px-4 py-3 rounded-xl transition ${
-              location.pathname === item.path
+            className={`block w-full text-left px-4 py-3 rounded-xl transition ${location.pathname === item.path
                 ? "bg-indigo-600 text-white"
                 : "text-slate-400 hover:bg-slate-800 hover:text-white"
-            }`}
+              }`}
           >
             {item.name}
           </Link>

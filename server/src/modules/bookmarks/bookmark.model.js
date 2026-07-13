@@ -17,11 +17,15 @@ const bookmarkSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: [
-        "YouTube",
-        "GitHub",
         "Documentation",
-        "Blog",
+        "GitHub",
+        "Video",
         "Article",
+        "API",
+        "Course",
+        "Tool",
+        "Blog",
+        "Reference",
         "Other",
       ],
       default: "Other",

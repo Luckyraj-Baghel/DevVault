@@ -9,6 +9,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import NotesPage from "../pages/NotesPage";
 import ProjectsPage from "../pages/ProjectsPage";
 import SnippetsPage from "../pages/SnippetsPage";
+import BookmarksPage from "../pages/BookmarksPage";
+import SearchPage from "../pages/SearchPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const AppRoutes = () => {
   return (
@@ -26,7 +29,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        
+
         <Route path="/notes" element={<NotesPage />} />
         <Route path="*" element={<NotFoundPage />} />
 
@@ -44,6 +47,33 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <SnippetsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookmarks"
+          element={
+            <ProtectedRoute>
+              <BookmarksPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <SearchPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
