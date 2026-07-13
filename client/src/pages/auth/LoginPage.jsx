@@ -15,7 +15,6 @@ const LoginPage = () => {
     });
 
     const handleChange = (e) => {
-        console.log(e.target.name, e.target.value);
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
