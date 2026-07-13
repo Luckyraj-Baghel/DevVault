@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import ProjectCard from "../components/projects/ProjectCard";
-import ProjectModal from "../components/projects/ProjectModal";
+import ProjectModal from "../components/projects/projectModal";
 import toast from "react-hot-toast";
 
 import {
