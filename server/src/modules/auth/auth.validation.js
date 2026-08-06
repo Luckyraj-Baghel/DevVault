@@ -25,3 +25,15 @@ export const validateRegisterData = ({ name, email, password }) => {
     );
   }
 };
+
+export const validateProfileUpdate = (data) => {
+  const { name, bio } = data;
+
+  if (!name || name.trim().length < 3) {
+    throw new Error("Name must be at least 3 characters");
+  }
+
+  if (bio && bio.length > 250) {
+    throw new Error("Bio cannot exceed 250 characters");
+  }
+};

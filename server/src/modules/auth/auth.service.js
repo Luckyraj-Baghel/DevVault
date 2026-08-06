@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "./auth.model.js";
 import { validateRegisterData } from "./auth.validation.js";
 import { sanitizeUser } from "../../utils/sanitizeUser.js";
+import { validateProfileUpdate } from "./auth.validation.js";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (userData) => {
@@ -76,4 +77,24 @@ export const getCurrentUser = async (userId) => {
     }
 
     return sanitizeUser(user);
+};
+
+export const updateProfile = async (userId, profileData) => {
+  validateProfileUpdate(profileData);
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  user.name = profileData.name;
+  user.bio = profileData.bio || "";
+  user.github = profileData.github || "";
+  user.linkedin = profileData.linkedin || "";
+  user.portfolio = profileData.portfolio || "";
+
+  await user.save();
+
+  return sanitizeUser(user);
 };

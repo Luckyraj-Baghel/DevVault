@@ -6,13 +6,19 @@ import { logoutUser } from "../services/auth.service";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import EditProfileModal from "../components/profile/EditProfileModal";
+import { updateProfile } from "../services/auth.service";
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showEditModal, setShowEditModal] = useState(false);
     const navigate = useNavigate();
-    const { setUser: setAuthUser } = useAuth();
+    const {
+        setUser: setAuthUser,
+        checkAuth,
+    } = useAuth();
 
     const handleLogout = async () => {
         const confirmed = window.confirm(
@@ -34,6 +40,32 @@ const ProfilePage = () => {
             toast.error(
                 error.response?.data?.message ||
                 "Failed to logout"
+            );
+        }
+    };
+
+    const handleUpdateProfile = async (
+        profileData
+    ) => {
+        try {
+            const response =
+                await updateProfile(profileData);
+
+            setUser(response.data);
+
+            await checkAuth();
+
+            toast.success(
+                "Profile updated successfully"
+            );
+
+            setShowEditModal(false);
+        } catch (error) {
+            console.log(error);
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to update profile"
             );
         }
     };
@@ -86,12 +118,62 @@ const ProfilePage = () => {
                             {user?.email}
                         </p>
 
+                        {user?.bio && (
+                            <p className="text-slate-300 mt-3">
+                                {user.bio}
+                            </p>
+                        )}
+
+                        <div className="flex gap-5 mt-4">
+
+                            {user?.github && (
+                                <a
+                                    href={user.github}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-indigo-400 hover:underline"
+                                >
+                                    GitHub
+                                </a>
+                            )}
+
+                            {user?.linkedin && (
+                                <a
+                                    href={user.linkedin}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-indigo-400 hover:underline"
+                                >
+                                    LinkedIn
+                                </a>
+                            )}
+
+                        </div>
+
                         <p className="text-slate-500 mt-2 text-sm">
                             Member since{" "}
                             {new Date(
                                 user?.createdAt
                             ).toLocaleDateString()}
                         </p>
+
+                        <button
+                            onClick={() =>
+                                setShowEditModal(true)
+                            }
+                            className="
+                                mt-5
+                                px-5
+                                py-2
+                                bg-indigo-600
+                                hover:bg-indigo-500
+                                rounded-xl
+                                text-white
+                                transition
+                                "
+                        >
+                            Edit Profile
+                        </button>
                     </div>
                 </div>
 
@@ -142,6 +224,15 @@ const ProfilePage = () => {
                     >
                         Logout
                     </button>
+
+                    <EditProfileModal
+                        isOpen={showEditModal}
+                        onClose={() =>
+                            setShowEditModal(false)
+                        }
+                        onSave={handleUpdateProfile}
+                        user={user}
+                    />
                 </div>
             </div>
         </DashboardLayout>
