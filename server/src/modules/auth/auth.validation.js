@@ -1,5 +1,21 @@
 import validator from "validator";
 
+export const validatePassword = (password) => {
+  if (
+    !validator.isStrongPassword(password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    })
+  ) {
+    throw new Error(
+      "Password must be at least 8 characters and include uppercase, lowercase, number and symbol"
+    );
+  }
+};
+
 export const validateRegisterData = ({ name, email, password }) => {
   if (!name || !email || !password) {
     throw new Error("All fields are required");
@@ -13,13 +29,9 @@ export const validateRegisterData = ({ name, email, password }) => {
     throw new Error("Invalid email address");
   }
 
-  if (!validator.isStrongPassword(password, {
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 1,
-  })) {
+  validatePassword(password);
+
+   {
     throw new Error(
       "Password must be at least 8 characters and include uppercase, lowercase, number and symbol"
     );
@@ -35,5 +47,35 @@ export const validateProfileUpdate = (data) => {
 
   if (bio && bio.length > 250) {
     throw new Error("Bio cannot exceed 250 characters");
+  }
+};
+
+export const validateChangePassword = ({
+  currentPassword,
+  newPassword,
+  confirmPassword,
+}) => {
+  if (
+    !currentPassword ||
+    !newPassword ||
+    !confirmPassword
+  ) {
+    throw new Error(
+      "All fields are required"
+    );
+  }
+
+  validatePassword(newPassword);
+
+  if (newPassword !== confirmPassword) {
+    throw new Error(
+      "Passwords do not match"
+    );
+  }
+
+  if (currentPassword === newPassword) {
+    throw new Error(
+      "New password must be different from current password"
+    );
   }
 };

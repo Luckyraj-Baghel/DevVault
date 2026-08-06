@@ -8,12 +8,15 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import EditProfileModal from "../components/profile/EditProfileModal";
 import { updateProfile } from "../services/auth.service";
+import { changePassword } from "../services/auth.service";
+import ChangePasswordModal from "../components/profile/ChangePasswordModal";
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const navigate = useNavigate();
     const {
         setUser: setAuthUser,
@@ -40,6 +43,25 @@ const ProfilePage = () => {
             toast.error(
                 error.response?.data?.message ||
                 "Failed to logout"
+            );
+        }
+    };
+
+    const handleChangePassword = async (formData) => {
+        try {
+            const response = await changePassword(formData);
+
+            toast.success(response.message);
+
+            setIsChangePasswordOpen(false);
+
+            setAuthUser(null);
+
+            navigate("/login");
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to change password"
             );
         }
     };
@@ -210,7 +232,23 @@ const ProfilePage = () => {
 
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-4">
+                    <button
+                        onClick={() =>
+                            setIsChangePasswordOpen(true)
+                        }
+                        className="
+                          px-6 py-3
+                          bg-indigo-600
+                          hover:bg-indigo-700
+                          text-white
+                          rounded-2xl
+                          transition
+                          "
+                    >
+                        Change Password
+                    </button>
+
                     <button
                         onClick={handleLogout}
                         className="
@@ -224,6 +262,14 @@ const ProfilePage = () => {
                     >
                         Logout
                     </button>
+
+                    <ChangePasswordModal
+                        isOpen={isChangePasswordOpen}
+                        onClose={() =>
+                            setIsChangePasswordOpen(false)
+                        }
+                        onSave={handleChangePassword}
+                    />
 
                     <EditProfileModal
                         isOpen={showEditModal}

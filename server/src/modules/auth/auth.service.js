@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "./auth.model.js";
-import { validateRegisterData } from "./auth.validation.js";
+import { validateRegisterData, validateChangePassword } from "./auth.validation.js";
 import { sanitizeUser } from "../../utils/sanitizeUser.js";
 import { validateProfileUpdate } from "./auth.validation.js";
 import jwt from "jsonwebtoken";
@@ -98,3 +98,45 @@ export const updateProfile = async (userId, profileData) => {
 
   return sanitizeUser(user);
 };
+
+
+export const changePassword = async (
+  userId,
+  passwordData
+) => {
+  validateChangePassword(passwordData);
+
+  const {
+    currentPassword,
+    newPassword,
+  } = passwordData;
+
+  const user = await User.findById(userId).select(
+    "+password"
+  );
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const isPasswordMatched =
+    await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+  if (!isPasswordMatched) {
+    throw new Error(
+      "Current password is incorrect"
+    );
+  }
+
+  const hashedPassword =
+    await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+
+  await user.save();
+
+  return true;
+};  

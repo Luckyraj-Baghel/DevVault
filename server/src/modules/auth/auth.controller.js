@@ -3,6 +3,7 @@ import {
   loginUser,
   getCurrentUser,
   updateProfile,
+  changePassword as changePasswordService,
 } from "./auth.service.js";
 
 export const register = async (req, res) => {
@@ -100,4 +101,31 @@ export const logout = (req, res) => {
       success: true,
       message: "Logged out successfully",
     });
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    await changePasswordService(
+      req.user.id,
+      req.body
+    );
+
+    res
+      .clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      })
+      .status(200)
+      .json({
+        success: true,
+        message:
+          "Password changed successfully. Please login again.",
+      });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
