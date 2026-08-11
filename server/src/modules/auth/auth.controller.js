@@ -4,6 +4,8 @@ import {
   getCurrentUser,
   updateProfile,
   changePassword as changePasswordService,
+  forgotPassword,
+  resetPassword,
 } from "./auth.service.js";
 
 export const register = async (req, res) => {
@@ -122,6 +124,45 @@ export const changePassword = async (req, res) => {
         message:
           "Password changed successfully. Please login again.",
       });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const forgotPasswordController = async (req, res) => {
+  try {
+    await forgotPassword(req.body.email);
+
+    res.status(200).json({
+      success: true,
+      message:
+        "If an account exists with this email, a password reset link has been sent.",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    await resetPassword(
+      token,
+      req.body
+    );
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Password reset successfully. Please login again.",
+    });
   } catch (error) {
     res.status(400).json({
       success: false,

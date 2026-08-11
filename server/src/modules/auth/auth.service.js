@@ -1,9 +1,15 @@
 import bcrypt from "bcryptjs";
 import User from "./auth.model.js";
-import { validateRegisterData, validateChangePassword } from "./auth.validation.js";
+import {
+  validateRegisterData,
+  validateChangePassword,
+  validateResetPassword,
+  validateProfileUpdate,
+} from "./auth.validation.js";
 import { sanitizeUser } from "../../utils/sanitizeUser.js";
-import { validateProfileUpdate } from "./auth.validation.js";
+import { sendPasswordResetEmail } from "../../utils/email.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 export const registerUser = async (userData) => {
     // Validate user input
@@ -139,4 +145,93 @@ export const changePassword = async (
   await user.save();
 
   return true;
-};  
+};
+
+export const forgotPassword = async (email) => {
+  if (!email) {
+    throw new Error("Email is required");
+  }
+
+  const user = await User.findOne({
+    email: email.toLowerCase().trim(),
+  });
+
+  if (!user) {
+    throw new Error("No account found with this email");
+  }
+
+  // Generate secure random token
+  const resetToken = crypto
+    .randomBytes(32)
+    .toString("hex");
+
+  // Hash token before storing in DB
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  user.resetPasswordToken = hashedToken;
+
+  // Token valid for 15 minutes
+  user.resetPasswordExpire =
+    Date.now() + 15 * 60 * 1000;
+
+  await user.save();
+
+  // Frontend reset page
+  const resetUrl =
+    `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  await sendPasswordResetEmail(
+    user.email,
+    resetUrl
+  );
+
+  return true;
+};
+
+export const resetPassword = async (
+  resetToken,
+  passwordData
+) => {
+  validateResetPassword(passwordData);
+
+  if (!resetToken) {
+    throw new Error("Reset token is required");
+  }
+
+  // Hash the token received from the reset link
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Find user with matching token and valid expiry
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpire: {
+      $gt: Date.now(),
+    },
+  }).select("+password");
+
+  if (!user) {
+    throw new Error("Invalid or expired reset token");
+  }
+
+  // Hash new password
+  const hashedPassword = await bcrypt.hash(
+    passwordData.newPassword,
+    10
+  );
+
+  user.password = hashedPassword;
+
+  // Invalidate reset token
+  user.resetPasswordToken = null;
+  user.resetPasswordExpire = null;
+
+  await user.save();
+
+  return true;
+};

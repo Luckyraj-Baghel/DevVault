@@ -79,3 +79,18 @@ export const validateChangePassword = ({
     );
   }
 };
+
+export const validateResetPassword = ({
+  newPassword,
+  confirmPassword,
+}) => {
+  if (!newPassword || !confirmPassword) {
+    throw new Error("All fields are required");
+  }
+
+  validatePassword(newPassword);
+
+  if (newPassword !== confirmPassword) {
+    throw new Error("Passwords do not match");
+  }
+};
