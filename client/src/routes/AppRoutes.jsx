@@ -12,6 +12,8 @@ import SnippetsPage from "../pages/SnippetsPage";
 import BookmarksPage from "../pages/BookmarksPage";
 import SearchPage from "../pages/SearchPage";
 import ProfilePage from "../pages/ProfilePage";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 
 const AppRoutes = () => {
   return (
@@ -20,6 +22,16 @@ const AppRoutes = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPasswordPage />}
+        />
+
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPasswordPage />}
+        />
 
         <Route
           path="/dashboard"
@@ -31,7 +43,6 @@ const AppRoutes = () => {
         />
 
         <Route path="/notes" element={<NotesPage />} />
-        <Route path="*" element={<NotFoundPage />} />
 
         <Route
           path="/projects"
@@ -77,6 +88,8 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route path="*" element={<NotFoundPage />} />
 
       </Routes>
     </BrowserRouter>

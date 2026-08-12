@@ -29,3 +29,13 @@ export const changePassword = async (data) => {
   const response = await api.put("/auth/change-password", data);
   return response.data;
 };
+
+export const resetPassword = async (data) => {
+  const response = await api.put("/auth/reset-password", data);
+  return response.data;
+};
+
+export const forgotPassword = async (data) => {
+    const response = await api.post("/auth/forgot-password", data);
+    return response.data;
+};

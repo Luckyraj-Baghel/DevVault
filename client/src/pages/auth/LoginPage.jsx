@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 
@@ -83,6 +83,15 @@ const LoginPage = () => {
                             placeholder="Enter your password"
                             className="w-full border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                    </div>
+
+                    <div className="flex justify-end">
+                        <Link
+                            to="/forgot-password"
+                            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                            Forgot Password?
+                        </Link>
                     </div>
 
                     <button
