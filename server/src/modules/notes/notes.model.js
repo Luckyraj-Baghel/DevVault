@@ -11,7 +11,7 @@ const noteSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true,
-    },  
+    },
 
     tags: {
       type: [String],
@@ -26,6 +26,11 @@ const noteSchema = new mongoose.Schema(
     isPinned: {
       type: Boolean,
       default: false,
+    },
+
+    summary: {
+      type: String,
+      default: "",
     },
 
     owner: {

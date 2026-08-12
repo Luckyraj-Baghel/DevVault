@@ -1,4 +1,5 @@
 import Note from "./notes.model.js";
+import { generateSummary } from "../../utils/ai.js";
 
 export const createNote = async (noteData, userId) => {
   const { title, content, tags, category, isPinned } = noteData;
@@ -114,6 +115,29 @@ export const togglePinNote = async (noteId, userId) => {
   }
 
   note.isPinned = !note.isPinned;
+
+  await note.save();
+
+  return note;
+};
+
+export const summarizeNote = async (noteId, userId) => {
+  const note = await Note.findOne({
+    _id: noteId,
+    owner: userId,
+  });
+
+  if (!note) {
+    throw new Error("Note not found");
+  }
+
+  if (!note.content || !note.content.trim()) {
+    throw new Error("Note content is empty");
+  }
+
+  const summary = await generateSummary(note.content);
+
+  note.summary = summary;
 
   await note.save();
 

@@ -6,6 +6,7 @@ import {
   update,
   remove,
   togglePin,
+  summarize,
 } from "./notes.controller.js";
 import authMiddleware from "../../middlewares/auth.middleware.js";
 
@@ -16,6 +17,11 @@ router.get("/", authMiddleware, getAll);
 router.get("/:id", authMiddleware, getOne);
 router.put("/:id", authMiddleware, update);
 router.patch("/:id/pin", authMiddleware, togglePin);
+router.post(
+  "/:id/summarize",
+  authMiddleware,
+  summarize
+);
 router.delete("/:id", authMiddleware, remove);
 
 export default router;

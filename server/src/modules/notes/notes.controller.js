@@ -5,6 +5,7 @@ import {
     updateNote,
     deleteNote,
     togglePinNote,
+    summarizeNote,
 } from "./notes.service.js";
 
 export const create = async (req, res) => {
@@ -115,6 +116,28 @@ export const togglePin = async (req, res) => {
     });
   } catch (error) {
     res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const summarize = async (req, res) => {
+  try {
+    const note = await summarizeNote(
+      req.params.id,
+      req.user.id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Note summarized successfully",
+      data: {
+        summary: note.summary,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({
       success: false,
       message: error.message,
     });

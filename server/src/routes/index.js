@@ -6,6 +6,7 @@ import snippetRoutes from "../modules/snippets/snippet.routes.js";
 import bookmarkRoutes from "../modules/bookmarks/bookmark.routes.js";
 import dashboardRoutes from "../modules/dashboard/dashboard.routes.js";
 import searchRoutes from "../modules/search/search.routes.js";
+import aiRoutes from "../modules/ai/ai.routes.js";
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use("/snippets", snippetRoutes);
 router.use("/bookmarks", bookmarkRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/search", searchRoutes);
+router.use("/ai", aiRoutes);
 
 export default router;
