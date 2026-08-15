@@ -24,3 +24,19 @@ export const togglePinNote = async (id) => {
   const response = await api.patch(`/notes/${id}/pin`);
   return response.data;
 };
+
+export const summarizeNote = async (id) => {
+  const response = await api.post(
+    `/notes/${id}/summarize`
+  );
+
+  return response.data;
+};
+
+export const removeNoteSummary = async (id) => {
+  const response = await api.delete(
+    `/notes/${id}/summary`
+  );
+
+  return response.data;
+};

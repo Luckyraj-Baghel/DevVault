@@ -6,6 +6,7 @@ import {
     deleteNote,
     togglePinNote,
     summarizeNote,
+    removeNoteSummary,
 } from "./notes.service.js";
 
 export const create = async (req, res) => {
@@ -135,6 +136,25 @@ export const summarize = async (req, res) => {
       data: {
         summary: note.summary,
       },
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const removeSummary = async (req, res) => {
+  try {
+    await removeNoteSummary(
+      req.params.id,
+      req.user.id
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "AI summary removed successfully",
     });
   } catch (error) {
     res.status(400).json({

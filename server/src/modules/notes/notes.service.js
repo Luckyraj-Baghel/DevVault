@@ -143,3 +143,26 @@ export const summarizeNote = async (noteId, userId) => {
 
   return note;
 };
+
+export const removeNoteSummary = async (noteId, userId) => {
+  const note = await Note.findOneAndUpdate(
+    {
+      _id: noteId,
+      owner: userId,
+    },
+    {
+      $unset: {
+        summary: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!note) {
+    throw new Error("Note not found");
+  }
+
+  return note;
+};

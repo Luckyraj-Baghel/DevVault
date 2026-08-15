@@ -1,9 +1,16 @@
+import { useState } from "react";
+import { summarizeNote, removeNoteSummary, } from "../../services/notes.service";
+import toast from "react-hot-toast";
+
 const NoteCard = ({
   note,
   onDelete,
   onEdit,
   onPin,
 }) => {
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [summary, setSummary] = useState(note.summary);
+
   const handleDelete = () => {
     const confirmed = window.confirm(
       `Delete "${note.title}" ?`
@@ -11,6 +18,50 @@ const NoteCard = ({
 
     if (confirmed) {
       onDelete(note._id);
+    }
+  };
+
+  const handleSummarize = async () => {
+    try {
+      setIsSummarizing(true);
+
+      const response = await summarizeNote(note._id);
+
+      console.log("AI SUMMARY RESPONSE:", response);
+
+      setSummary(response.data.summary);
+
+      toast.success("AI summary generated successfully");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to generate AI summary"
+      );
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
+  const handleRemoveSummary = async () => {
+    const confirmed = window.confirm(
+      "Remove the AI summary from this note?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await removeNoteSummary(note._id);
+
+      setSummary("");
+
+      toast.success("AI summary removed successfully");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "Failed to remove AI summary"
+      );
     }
   };
 
@@ -32,11 +83,10 @@ const NoteCard = ({
         <div className="flex gap-3">
           <button
             onClick={() => onPin(note._id)}
-            className={`transition ${
-              note.isPinned
-                ? "text-yellow-400 hover:text-yellow-300"
-                : "text-slate-500 hover:text-yellow-400"
-            }`}
+            className={`transition ${note.isPinned
+              ? "text-yellow-400 hover:text-yellow-300"
+              : "text-slate-500 hover:text-yellow-400"
+              }`}
           >
             📌
           </button>
@@ -70,6 +120,46 @@ const NoteCard = ({
           {note.category}
         </span>
       </div>
+
+      <div className="mt-5">
+        <button
+          onClick={handleSummarize}
+          disabled={isSummarizing}
+          className="w-full px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium transition"
+        >
+          {isSummarizing
+            ? "✨ Generating Summary..."
+            : summary
+              ? "🔄 Regenerate Summary"
+              : "✨ Summarize with AI"}
+        </button>
+      </div>
+
+      {summary && (
+        <div className="mt-5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span>✨</span>
+
+              <h3 className="text-sm font-semibold text-indigo-300">
+                AI Summary
+              </h3>
+            </div>
+
+            <button
+              onClick={handleRemoveSummary}
+              className="text-slate-500 hover:text-red-400 transition"
+              title="Remove AI summary"
+            >
+              🗑️
+            </button>
+          </div>
+
+          <p className="text-sm text-slate-300 leading-6 whitespace-pre-line">
+            {summary}
+          </p>
+        </div>
+      )}
 
       {note.tags?.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-5">
