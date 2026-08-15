@@ -60,7 +60,7 @@ const BookmarksPage = () => {
         editingBookmark._id,
         bookmarkData
       );
-      
+
       setBookmarks((prev) =>
         prev.map((bookmark) =>
           bookmark._id === editingBookmark._id
@@ -119,8 +119,10 @@ const BookmarksPage = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-white text-xl">
-          Loading bookmarks...
+        <div className="flex items-center justify-center min-h-[300px]">
+          <p className="text-slate-600 text-lg font-medium">
+            Loading bookmarks...
+          </p>
         </div>
       </DashboardLayout>
     );
@@ -130,30 +132,47 @@ const BookmarksPage = () => {
     <DashboardLayout>
       <div className="space-y-8">
 
-        <div className="flex justify-between items-center">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-5">
           <div>
-            <h1 className="text-4xl font-bold text-white">
+            <h1 className="text-4xl font-bold text-slate-900">
               Bookmarks
             </h1>
 
-            <p className="text-slate-400 mt-2">
+            <p className="text-slate-600 mt-2">
               Store useful developer resources and links.
             </p>
           </div>
 
           <button
             onClick={openCreateModal}
-            className="bg-indigo-600 hover:bg-indigo-700 transition px-5 py-3 rounded-2xl text-white font-medium"
+            className="self-start sm:self-auto bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200"
           >
             + New Bookmark
           </button>
         </div>
 
+        {/* Bookmarks */}
         {bookmarks.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center">
-            <p className="text-slate-400">
-              No bookmarks found.
+          <div className="bg-amber-50 border border-amber-100 rounded-3xl p-10 text-center shadow-sm">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-white border border-amber-100 flex items-center justify-center text-2xl">
+              🔖
+            </div>
+
+            <h2 className="text-xl font-semibold text-slate-900 mb-2">
+              No bookmarks yet
+            </h2>
+
+            <p className="text-slate-600 mb-6">
+              Start saving useful developer resources and links for later.
             </p>
+
+            <button
+              onClick={openCreateModal}
+              className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-3 rounded-xl transition"
+            >
+              + Create Bookmark
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -169,6 +188,7 @@ const BookmarksPage = () => {
           </div>
         )}
 
+        {/* Bookmark Modal */}
         <BookmarkModal
           isOpen={isModalOpen}
           onClose={() => {

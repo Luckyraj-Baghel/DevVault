@@ -20,10 +20,8 @@ const BookmarkModal = ({
         title: initialData.title || "",
         url: initialData.url || "",
         type: initialData.type || "",
-        description:
-          initialData.description || "",
-        tags:
-          initialData.tags?.join(", ") || "",
+        description: initialData.description || "",
+        tags: initialData.tags?.join(", ") || "",
       });
     } else {
       setFormData({
@@ -48,7 +46,6 @@ const BookmarkModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(formData);
     onSubmit({
       ...formData,
       tags: formData.tags
@@ -60,115 +57,186 @@ const BookmarkModal = ({
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4">
-      <div className="bg-slate-900 rounded-3xl w-full max-w-2xl p-8 border border-slate-800">
+  const inputClass =
+    "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100";
 
-        <h2 className="text-3xl font-bold text-white mb-8">
-          {initialData
-            ? "Edit Bookmark"
-            : "New Bookmark"}
-        </h2>
+  const labelClass =
+    "block text-sm font-semibold text-slate-700 mb-2";
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+
+      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 border border-amber-100 shadow-2xl">
+
+        {/* Header */}
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900">
+              {initialData
+                ? "Edit Bookmark"
+                : "New Bookmark"}
+            </h2>
+
+            <p className="text-slate-500 mt-2">
+              {initialData
+                ? "Update your saved developer resource."
+                : "Save a useful developer resource for later."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
 
         <form
           onSubmit={handleSubmit}
           className="space-y-5"
         >
-          <input
-            type="text"
-            name="title"
-            placeholder="Bookmark title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-            required
-          />
 
-          <input
-            type="url"
-            name="url"
-            placeholder="https://..."
-            value={formData.url}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-            required
-          />
+          {/* Title */}
+          <div>
+            <label className={labelClass}>
+              Bookmark Title
+            </label>
 
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-            required
-          >
-            <option value="" disabled>
-              Select Bookmark Type
-            </option>
+            <input
+              type="text"
+              name="title"
+              placeholder="e.g. React Documentation"
+              value={formData.title}
+              onChange={handleChange}
+              className={inputClass}
+              required
+            />
+          </div>
 
-            <option value="Documentation">
-              Documentation
-            </option>
+          {/* URL */}
+          <div>
+            <label className={labelClass}>
+              URL
+            </label>
 
-            <option value="GitHub">
-              GitHub
-            </option>
+            <input
+              type="url"
+              name="url"
+              placeholder="https://..."
+              value={formData.url}
+              onChange={handleChange}
+              className={inputClass}
+              required
+            />
+          </div>
 
-            <option value="Video">
-              Video
-            </option>
+          {/* Type */}
+          <div>
+            <label className={labelClass}>
+              Bookmark Type
+            </label>
 
-            <option value="Article">
-              Article
-            </option>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className={`${inputClass} cursor-pointer`}
+              required
+            >
+              <option value="" disabled>
+                Select Bookmark Type
+              </option>
 
-            <option value="API">
-              API
-            </option>
+              <option value="Documentation">
+                Documentation
+              </option>
 
-            <option value="Tool">
-              Tool
-            </option>
+              <option value="GitHub">
+                GitHub
+              </option>
 
-            <option value="Other">
-              Other
-            </option>
-          </select>
+              <option value="Video">
+                Video
+              </option>
 
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white h-24"
-          />
+              <option value="Article">
+                Article
+              </option>
 
-          <input
-            type="text"
-            name="tags"
-            placeholder="react, api, auth"
-            value={formData.tags}
-            onChange={handleChange}
-            className="w-full bg-slate-800 rounded-xl p-4 text-white"
-          />
+              <option value="API">
+                API
+              </option>
 
-          <div className="flex justify-end gap-4">
+              <option value="Tool">
+                Tool
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+            </select>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className={labelClass}>
+              Description
+            </label>
+
+            <textarea
+              name="description"
+              placeholder="What is this resource useful for?"
+              value={formData.description}
+              onChange={handleChange}
+              className={`${inputClass} h-24 resize-none`}
+            />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className={labelClass}>
+              Tags
+            </label>
+
+            <input
+              type="text"
+              name="tags"
+              placeholder="react, api, auth"
+              value={formData.tags}
+              onChange={handleChange}
+              className={inputClass}
+            />
+
+            <p className="text-xs text-slate-400 mt-2">
+              Separate tags with commas.
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-5 border-t border-slate-100">
+
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-3 rounded-xl bg-slate-800 text-white"
+              className="px-5 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-semibold hover:bg-slate-200 transition"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-5 py-3 rounded-xl bg-indigo-600 text-white"
+              className="px-5 py-3 rounded-xl bg-amber-500 text-white font-semibold shadow-sm hover:bg-amber-600 hover:shadow-md transition"
             >
-              Save Bookmark
+              {initialData
+                ? "Update Bookmark"
+                : "Save Bookmark"}
             </button>
+
           </div>
         </form>
-
       </div>
     </div>
   );

@@ -102,9 +102,10 @@ const SnippetsPage = () => {
   const handleCopy = async (code) => {
     try {
       await navigator.clipboard.writeText(code);
-      alert("Snippet copied to clipboard!");
+      toast.success("Snippet copied to clipboard!");
     } catch (error) {
       console.log(error);
+      toast.error("Failed to copy snippet");
     }
   };
 
@@ -121,8 +122,10 @@ const SnippetsPage = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-white text-xl">
-          Loading snippets...
+        <div className="flex items-center justify-center min-h-[300px]">
+          <p className="text-slate-600 text-lg font-medium">
+            Loading snippets...
+          </p>
         </div>
       </DashboardLayout>
     );
@@ -132,30 +135,47 @@ const SnippetsPage = () => {
     <DashboardLayout>
       <div className="space-y-8">
 
-        <div className="flex justify-between items-center">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-5">
           <div>
-            <h1 className="text-4xl font-bold text-white">
+            <h1 className="text-4xl font-bold text-slate-900">
               Code Snippets
             </h1>
 
-            <p className="text-slate-400 mt-2">
+            <p className="text-slate-600 mt-2">
               Save reusable code snippets for future projects.
             </p>
           </div>
 
           <button
             onClick={openCreateModal}
-            className="bg-indigo-600 hover:bg-indigo-700 transition px-5 py-3 rounded-2xl text-white font-medium"
+            className="self-start sm:self-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200"
           >
             + New Snippet
           </button>
         </div>
 
+        {/* Snippets */}
         {snippets.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center">
-            <p className="text-slate-400">
-              No snippets found.
+          <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-10 text-center shadow-sm">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-white border border-emerald-100 flex items-center justify-center text-2xl">
+              💻
+            </div>
+
+            <h2 className="text-xl font-semibold text-slate-900 mb-2">
+              No snippets yet
+            </h2>
+
+            <p className="text-slate-600 mb-6">
+              Start building your reusable code library by creating your first snippet.
             </p>
+
+            <button
+              onClick={openCreateModal}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-3 rounded-xl transition"
+            >
+              + Create Snippet
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -171,6 +191,7 @@ const SnippetsPage = () => {
           </div>
         )}
 
+        {/* Snippet Modal */}
         <SnippetModal
           isOpen={isModalOpen}
           onClose={() => {

@@ -36,55 +36,77 @@ const DashboardPage = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-white text-xl">
-          Loading dashboard...
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-slate-500 text-sm">
+            Loading dashboard...
+          </div>
         </div>
       </DashboardLayout>
     );
   }
+
+  const totalResources =
+    stats.totalNotes +
+    stats.totalProjects +
+    stats.totalSnippets +
+    stats.totalBookmarks;
+
+  const pinnedItems =
+    stats.pinnedNotes +
+    stats.favoriteSnippets +
+    stats.favoriteBookmarks;
 
   return (
     <DashboardLayout>
       <div className="space-y-8">
 
         {/* Hero Section */}
-        <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-8">
-          <div className="absolute -top-20 -right-20 h-52 w-52 rounded-full bg-indigo-500/10 blur-3xl"></div>
+        <section className="relative overflow-hidden rounded-3xl border border-indigo-100 bg-indigo-50/50 p-6 md:p-8 shadow-sm">
 
           <div className="relative z-10">
-            <h1 className="text-4xl font-bold text-white mb-3">
-              Welcome back 👋
-            </h1>
+            <div className="max-w-2xl">
+              <p className="text-sm font-medium text-indigo-600 mb-3">
+                Developer Workspace
+              </p>
 
-            <p className="text-slate-400 text-lg">
-              Your personal developer workspace is ready.
-            </p>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+                Welcome back 👋
+              </h1>
+
+              <p className="text-slate-500 text-base md:text-lg mt-3">
+                Your personal developer workspace is ready.
+              </p>
+            </div>
 
             <div className="flex gap-10 mt-8 flex-wrap">
+
               <div>
-                <p className="text-slate-500 text-sm">Total Resources</p>
-                <p className="text-2xl font-bold text-white">
-                  {stats.totalNotes +
-                    stats.totalProjects +
-                    stats.totalSnippets +
-                    stats.totalBookmarks}
+                <p className="text-slate-500 text-sm">
+                  Total Resources
+                </p>
+
+                <p className="text-2xl font-bold text-slate-900 mt-1">
+                  {totalResources}
                 </p>
               </div>
 
               <div>
-                <p className="text-slate-500 text-sm">Pinned Items</p>
-                <p className="text-2xl font-bold text-white">
-                  {stats.pinnedNotes +
-                    stats.favoriteSnippets +
-                    stats.favoriteBookmarks}
+                <p className="text-slate-500 text-sm">
+                  Pinned Items
+                </p>
+
+                <p className="text-2xl font-bold text-slate-900 mt-1">
+                  {pinnedItems}
                 </p>
               </div>
+
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+
           <StatCard
             title="Notes"
             value={stats.totalNotes}
@@ -112,105 +134,126 @@ const DashboardPage = () => {
             subtitle={`${stats.favoriteBookmarks} favorites`}
             accent="bg-amber-500"
           />
+
         </div>
 
-        {/* Preview Sections */}
+        {/* Recent Resources */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-          <SectionCard title="Recent Notes" link="/notes">
+          {/* Recent Notes */}
+          <SectionCard
+            title="Recent Notes"
+            link="/notes"
+            accent="indigo"
+          >
             <div className="space-y-3">
               {recentNotes.length > 0 ? (
                 recentNotes.map((note) => (
                   <div
                     key={note._id}
-                    className="bg-slate-800 rounded-2xl p-4 border border-slate-700"
+                    className="group bg-white/70 rounded-2xl p-4 border border-indigo-100 hover:border-indigo-200 hover:bg-indigo-50 transition-all duration-200"
                   >
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-slate-900 font-medium">
                       {note.title}
                     </h3>
 
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-slate-500 text-sm mt-1">
                       {note.category || "General"}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-slate-400">
+                <p className="text-slate-500 text-sm">
                   No notes found.
                 </p>
               )}
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Projects" link="/projects">
+          {/* Recent Projects */}
+          <SectionCard
+            title="Recent Projects"
+            link="/projects"
+            accent="violet"
+          >
             <div className="space-y-3">
               {recentProjects.length > 0 ? (
                 recentProjects.map((project) => (
                   <div
                     key={project._id}
-                    className="bg-slate-800 rounded-2xl p-4 border border-slate-700"
+                    className="group bg-white/70 rounded-2xl p-4 border border-violet-100 hover:border-violet-200 hover:bg-violet-50 transition-all duration-200"
                   >
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-slate-900 font-medium">
                       {project.title}
                     </h3>
 
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-slate-500 text-sm mt-1">
                       {project.status}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-slate-400">
+                <p className="text-slate-500 text-sm">
                   No projects found.
                 </p>
               )}
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Snippets" link="/snippets">
+          {/* Recent Snippets */}
+          <SectionCard
+            title="Recent Snippets"
+            link="/snippets"
+            accent="emerald"
+          >
             <div className="space-y-3">
               {recentSnippets.length > 0 ? (
                 recentSnippets.map((snippet) => (
                   <div
                     key={snippet._id}
-                    className="bg-slate-800 rounded-2xl p-4 border border-slate-700"
+                    className="group bg-white/70 rounded-2xl p-4 border border-emerald-100 hover:border-emerald-200 hover:bg-emerald-50 transition-all duration-200"
                   >
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-slate-900 font-medium">
                       {snippet.title}
                     </h3>
 
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-slate-500 text-sm mt-1">
                       {snippet.language}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-slate-400">
+                <p className="text-slate-500 text-sm">
                   No snippets found.
                 </p>
               )}
             </div>
           </SectionCard>
 
-          <SectionCard title="Recent Bookmarks" link="/bookmarks">
+          {/* Recent Bookmarks */}
+          <SectionCard
+            title="Recent Bookmarks"
+            link="/bookmarks"
+            accent="amber"
+          >
             <div className="space-y-3">
               {recentBookmarks.length > 0 ? (
                 recentBookmarks.map((bookmark) => (
                   <div
                     key={bookmark._id}
-                    className="bg-slate-800 rounded-2xl p-4 border border-slate-700"
+                    className="group bg-white/70 rounded-2xl p-4 border border-amber-100 hover:border-amber-200 hover:bg-amber-50 transition-all duration-200"
                   >
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-slate-900 font-medium">
                       {bookmark.title}
                     </h3>
 
-                    <p className="text-slate-400 text-sm mt-1">
+                    <p className="text-slate-500 text-sm mt-1">
                       {bookmark.type}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-slate-400">
+                <p className="text-slate-500 text-sm">
                   No bookmarks found.
                 </p>
               )}

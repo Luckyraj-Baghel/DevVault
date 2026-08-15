@@ -3,10 +3,13 @@ const ProjectCard = ({
   onEdit,
   onDelete,
 }) => {
-  const statusColors = {
-    Planning: "bg-slate-700 text-slate-300",
-    "In Progress": "bg-indigo-500/20 text-indigo-300",
-    Completed: "bg-emerald-500/20 text-emerald-300",
+  const statusStyles = {
+    Planning:
+      "bg-white text-slate-700 border border-slate-200",
+    "In Progress":
+      "bg-violet-100 text-violet-700 border border-violet-200",
+    Completed:
+      "bg-emerald-50 text-emerald-700 border border-emerald-200",
   };
 
   const handleDelete = () => {
@@ -20,47 +23,57 @@ const ProjectCard = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:border-slate-700 transition">
+    <div className="bg-violet-50 border border-violet-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+
+      {/* Header */}
       <div className="flex justify-between items-start mb-5">
-        <div>
-          <h2 className="text-2xl font-bold text-white">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-bold text-slate-900 break-words">
             {project.title}
           </h2>
 
           <span
-            className={`inline-block mt-3 px-3 py-1 rounded-full text-xs font-medium ${statusColors[project.status]}`}
+            className={`inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold ${
+              statusStyles[project.status] ||
+              "bg-white text-slate-700 border border-slate-200"
+            }`}
           >
             {project.status}
           </span>
         </div>
 
-        <div className="flex gap-3">
+        {/* Actions */}
+        <div className="flex gap-2 ml-4 shrink-0">
           <button
             onClick={() => onEdit(project)}
-            className="text-blue-400 hover:text-blue-300"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-violet-100 text-violet-600 hover:bg-violet-100 hover:text-violet-700 transition"
+            title="Edit project"
           >
             ✏️
           </button>
 
           <button
             onClick={handleDelete}
-            className="text-red-400 hover:text-red-300"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 transition"
+            title="Delete project"
           >
             🗑️
           </button>
         </div>
       </div>
 
-      <p className="text-slate-400 mb-6 line-clamp-4">
+      {/* Description */}
+      <p className="text-slate-800 mb-6 line-clamp-4 leading-relaxed">
         {project.description}
       </p>
 
+      {/* Tech Stack */}
       {project.techStack?.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-6">
           {project.techStack.map((tech, index) => (
             <span
               key={index}
-              className="px-3 py-1 rounded-full bg-slate-800 text-indigo-300 text-sm"
+              className="px-3 py-1 rounded-full bg-white border border-violet-100 text-violet-700 text-sm font-medium"
             >
               {tech}
             </span>
@@ -68,13 +81,14 @@ const ProjectCard = ({
         </div>
       )}
 
-      <div className="flex gap-4">
+      {/* Links */}
+      <div className="flex flex-wrap gap-3">
         {project.githubLink && (
           <a
             href={project.githubLink}
             target="_blank"
             rel="noreferrer"
-            className="text-slate-400 hover:text-white transition"
+            className="px-4 py-2 rounded-xl bg-white border border-violet-100 text-slate-700 hover:text-violet-700 hover:border-violet-200 transition font-medium text-sm"
           >
             GitHub ↗
           </a>
@@ -85,7 +99,7 @@ const ProjectCard = ({
             href={project.liveLink}
             target="_blank"
             rel="noreferrer"
-            className="text-slate-400 hover:text-white transition"
+            className="px-4 py-2 rounded-xl bg-white border border-violet-100 text-slate-700 hover:text-violet-700 hover:border-violet-200 transition font-medium text-sm"
           >
             Live Demo ↗
           </a>

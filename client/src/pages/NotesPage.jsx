@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+
 import DashboardLayout from "../components/layout/DashboardLayout";
 import EditNoteModal from "../components/notes/EditNoteModal";
+import CreateNoteModal from "../components/notes/CreateNoteModal";
+import NoteCard from "../components/notes/NoteCard";
+
 import toast from "react-hot-toast";
 
 import {
@@ -11,17 +15,15 @@ import {
   togglePinNote,
 } from "../services/notes.service";
 
-import NoteCard from "../components/notes/NoteCard";
-import CreateNoteModal from "../components/notes/CreateNoteModal";
-
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const [showEditModal, setShowEditModal] = useState(false);
 
   const [selectedNote, setSelectedNote] = useState(null);
 
@@ -52,7 +54,7 @@ const NotesPage = () => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "Failed to create note"
+          "Failed to create note"
       );
     }
   };
@@ -64,11 +66,12 @@ const NotesPage = () => {
       setNotes((prev) =>
         prev.filter((note) => note._id !== id)
       );
+
       toast.success("Note deleted successfully");
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "Failed to delete note"
+          "Failed to delete note"
       );
     }
   };
@@ -78,19 +81,17 @@ const NotesPage = () => {
     setShowEditModal(true);
   };
 
-  const handleUpdateNote = async (
-    id,
-    noteData
-  ) => {
+  const handleUpdateNote = async (id, noteData) => {
     try {
       await updateNote(id, noteData);
 
       await fetchNotes();
+
       toast.success("Note updated successfully");
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-        "Failed to update note"
+          "Failed to update note"
       );
     }
   };
@@ -101,11 +102,9 @@ const NotesPage = () => {
 
       await fetchNotes();
     } catch (error) {
-      console.log(error);
-
-      alert(
+      toast.error(
         error.response?.data?.message ||
-        "Failed to pin note"
+          "Failed to pin note"
       );
     }
   };
@@ -113,8 +112,10 @@ const NotesPage = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-white text-xl">
-          Loading notes...
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-slate-500 text-sm">
+            Loading notes...
+          </div>
         </div>
       </DashboardLayout>
     );
@@ -145,88 +146,143 @@ const NotesPage = () => {
 
   return (
     <DashboardLayout>
-      {filteredNotes.length === 0 && (
-        <div className="text-center py-16 text-slate-500">
-          No notes found for "{searchTerm}"
-        </div>
-      )}
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search notes, tags, categories..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="
-      w-full
-      bg-slate-900
-      border
-      border-slate-800
-      rounded-2xl
-      px-5
-      py-4
-      text-white
-      placeholder-slate-500
-      outline-none
-      focus:border-indigo-500
-      transition
-    "
-        />
-      </div>
-
-      <div className="flex gap-3 flex-wrap mt-4">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`
-        px-4 py-2 rounded-xl transition
-        ${selectedCategory === category
-                ? "bg-indigo-600 text-white"
-                : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white"
-              }
-      `}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
       <div className="space-y-8">
 
-        <div className="flex items-center justify-between">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <p className="text-sm font-medium text-indigo-600 mb-2">
+              Knowledge Vault
+            </p>
+
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               Notes
             </h1>
 
-            <p className="text-slate-400 mt-2">
+            <p className="text-slate-500 mt-2">
               Capture ideas, concepts and learning resources.
             </p>
           </div>
 
           <button
             onClick={() => setShowModal(true)}
-            className="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium"
+            className="
+              px-5 py-3
+              rounded-2xl
+              bg-indigo-600
+              hover:bg-indigo-700
+              text-white
+              font-medium
+              shadow-sm
+              hover:shadow-md
+              transition
+            "
           >
             + New Note
           </button>
         </div>
 
-        {notes.length === 0 ? (
-          <div className="border border-slate-800 bg-slate-900 rounded-3xl p-16 text-center">
-            <div className="text-6xl mb-6">📝</div>
+        {/* Search */}
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search notes, tags, categories..."
+            value={searchTerm}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
+            className="
+              w-full
+              bg-white
+              border border-slate-200
+              rounded-2xl
+              px-5 py-4
+              text-slate-900
+              placeholder:text-slate-400
+              outline-none
+              shadow-sm
+              focus:border-indigo-400
+              focus:ring-4
+              focus:ring-indigo-100
+              transition
+            "
+          />
+        </div>
 
-            <h2 className="text-2xl font-semibold text-white">
+        {/* Categories */}
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() =>
+                setSelectedCategory(category)
+              }
+              className={`
+                px-4 py-2
+                rounded-xl
+                text-sm
+                font-medium
+                border
+                transition
+                ${
+                  selectedCategory === category
+                    ? "bg-indigo-600 border-indigo-600 text-white shadow-sm"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                }
+              `}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Empty Search Result */}
+        {filteredNotes.length === 0 &&
+          notes.length > 0 && (
+            <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center shadow-sm">
+              <div className="text-5xl mb-4">
+                🔎
+              </div>
+
+              <h2 className="text-xl font-semibold text-slate-900">
+                No notes found
+              </h2>
+
+              <p className="text-slate-500 mt-2">
+                Try a different search term or category.
+              </p>
+            </div>
+          )}
+
+        {/* No Notes */}
+        {notes.length === 0 ? (
+          <div className="bg-white border border-slate-200 rounded-3xl p-12 md:p-16 text-center shadow-sm">
+            <div className="text-6xl mb-6">
+              📝
+            </div>
+
+            <h2 className="text-2xl font-semibold text-slate-900">
               No Notes Yet
             </h2>
 
-            <p className="text-slate-400 mt-3">
-              Create your first note to start building your knowledge vault.
+            <p className="text-slate-500 mt-3 max-w-md mx-auto">
+              Create your first note to start building
+              your knowledge vault.
             </p>
 
             <button
               onClick={() => setShowModal(true)}
-              className="mt-8 px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white transition"
+              className="
+                mt-8
+                px-6 py-3
+                rounded-2xl
+                bg-indigo-600
+                hover:bg-indigo-700
+                text-white
+                font-medium
+                shadow-sm
+                transition
+              "
             >
               Create First Note
             </button>
@@ -234,7 +290,11 @@ const NotesPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {[...filteredNotes]
-              .sort((a, b) => b.isPinned - a.isPinned)
+              .sort(
+                (a, b) =>
+                  Number(b.isPinned) -
+                  Number(a.isPinned)
+              )
               .map((note) => (
                 <NoteCard
                   key={note._id}
@@ -247,20 +307,22 @@ const NotesPage = () => {
           </div>
         )}
 
+        {/* Create Modal */}
         <CreateNoteModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
           onCreate={handleCreateNote}
         />
 
-      </div>
+        {/* Edit Modal */}
+        <EditNoteModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          note={selectedNote}
+          onUpdate={handleUpdateNote}
+        />
 
-      <EditNoteModal
-        isOpen={showEditModal}
-        onClose={() => setShowEditModal(false)}
-        note={selectedNote}
-        onUpdate={handleUpdateNote}
-      />
+      </div>
     </DashboardLayout>
   );
 };

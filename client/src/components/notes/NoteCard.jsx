@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { summarizeNote, removeNoteSummary, } from "../../services/notes.service";
+import {
+  summarizeNote,
+  removeNoteSummary,
+} from "../../services/notes.service";
 import toast from "react-hot-toast";
 
 const NoteCard = ({
@@ -66,66 +69,126 @@ const NoteCard = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:border-slate-700 transition">
+    <div
+      className="
+    bg-indigo-50
+    border border-indigo-100
+    rounded-3xl
+    p-6
+    shadow-sm
+    transition-all duration-300
+    hover:-translate-y-1
+    hover:bg-indigo-100/70
+    hover:shadow-lg
+    hover:border-indigo-200
+  "
+    >
+      {/* Header */}
       <div className="flex justify-between items-start mb-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold text-white">
+        <div className="flex items-center gap-2 min-w-0">
+          <h2 className="text-xl font-semibold text-slate-900 truncate">
             {note.title}
           </h2>
 
           {note.isPinned && (
-            <span className="text-yellow-400 text-lg">
+            <span
+              className="text-amber-500 text-lg shrink-0"
+              title="Pinned"
+            >
               📌
             </span>
           )}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2 ml-3 shrink-0">
           <button
             onClick={() => onPin(note._id)}
-            className={`transition ${note.isPinned
-              ? "text-yellow-400 hover:text-yellow-300"
-              : "text-slate-500 hover:text-yellow-400"
+            className={`h-9 w-9 rounded-xl flex items-center justify-center transition ${note.isPinned
+                ? "bg-amber-50 text-amber-500 hover:bg-amber-100"
+                : "bg-slate-50 text-slate-400 hover:bg-amber-50 hover:text-amber-500"
               }`}
+            title={
+              note.isPinned
+                ? "Unpin note"
+                : "Pin note"
+            }
           >
             📌
           </button>
 
           <button
             onClick={() => onEdit(note)}
-            className="text-blue-400 hover:text-blue-300"
+            className="
+              h-9 w-9
+              rounded-xl
+              bg-slate-50
+              text-slate-500
+              flex items-center justify-center
+              hover:bg-indigo-50
+              hover:text-indigo-600
+              transition
+            "
+            title="Edit note"
           >
             ✏️
           </button>
 
           <button
             onClick={handleDelete}
-            className="text-red-400 hover:text-red-300"
+            className="
+              h-9 w-9
+              rounded-xl
+              bg-slate-50
+              text-slate-500
+              flex items-center justify-center
+              hover:bg-red-50
+              hover:text-red-500
+              transition
+            "
+            title="Delete note"
           >
             🗑️
           </button>
         </div>
       </div>
 
-      <p className="text-slate-400 mb-6 line-clamp-4">
+      {/* Note Content */}
+      <p className="text-slate-800 mb-6 line-clamp-4 leading-6">
         {note.content}
       </p>
 
-      <div className="flex justify-between items-center">
-        <span className="text-xs text-slate-500">
-          {new Date(note.createdAt).toLocaleDateString()}
+      {/* Metadata */}
+      <div className="flex justify-between items-center gap-3">
+        <span className="text-xs text-slate-400">
+          {new Date(
+            note.createdAt
+          ).toLocaleDateString()}
         </span>
 
-        <span className="text-xs px-3 py-1 rounded-full bg-slate-800 text-slate-300">
+        <span className="text-xs px-3 py-1.5 rounded-full bg-white text-slate-600 font-medium">
           {note.category}
         </span>
       </div>
 
+      {/* AI Summary Action */}
       <div className="mt-5">
         <button
           onClick={handleSummarize}
           disabled={isSummarizing}
-          className="w-full px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium transition"
+          className="
+            w-full
+            px-4 py-2.5
+            rounded-xl
+            bg-indigo-600
+            hover:bg-indigo-700
+            disabled:opacity-50
+            disabled:cursor-not-allowed
+            text-white
+            font-medium
+            shadow-sm
+            hover:shadow
+            transition
+          "
         >
           {isSummarizing
             ? "✨ Generating Summary..."
@@ -135,38 +198,65 @@ const NoteCard = ({
         </button>
       </div>
 
+      {/* AI Summary */}
       {summary && (
-        <div className="mt-5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700">
+        <div
+          className="
+            mt-5
+            rounded-2xl
+            bg-indigo-50/60
+            border border-indigo-100
+            p-4
+          "
+        >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <span>✨</span>
+              <span className="h-7 w-7 rounded-lg bg-indigo-100 flex items-center justify-center text-sm">
+                ✨
+              </span>
 
-              <h3 className="text-sm font-semibold text-indigo-300">
+              <h3 className="text-sm font-semibold text-indigo-700">
                 AI Summary
               </h3>
             </div>
 
             <button
               onClick={handleRemoveSummary}
-              className="text-slate-500 hover:text-red-400 transition"
+              className="
+                h-8 w-8
+                rounded-lg
+                flex items-center justify-center
+                text-slate-400
+                hover:bg-red-50
+                hover:text-red-500
+                transition
+              "
               title="Remove AI summary"
             >
               🗑️
             </button>
           </div>
 
-          <p className="text-sm text-slate-300 leading-6 whitespace-pre-line">
+          <p className="text-sm text-slate-800 leading-6 whitespace-pre-line">
             {summary}
           </p>
         </div>
       )}
 
+      {/* Tags */}
       {note.tags?.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-5">
           {note.tags.map((tag, index) => (
             <span
               key={index}
-              className="text-xs px-2 py-1 rounded-full bg-slate-800 text-indigo-300"
+              className="
+                text-xs
+                px-2.5 py-1
+                rounded-lg
+                bg-indigo-50
+                text-indigo-600
+                font-medium
+              "
             >
               #{tag}
             </span>

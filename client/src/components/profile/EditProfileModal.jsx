@@ -39,63 +39,180 @@ const EditProfileModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-2xl p-6 w-full max-w-lg border border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
 
-        <h2 className="text-2xl font-bold text-white mb-6">
-          Edit Profile
-        </h2>
+      <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white shadow-2xl">
 
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 border-b border-slate-100">
+          <h2 className="text-2xl font-bold text-slate-900">
+            Edit Profile
+          </h2>
+
+          <p className="text-sm text-slate-500 mt-1">
+            Update your profile information.
+          </p>
+        </div>
+
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-4"
+          className="p-6 space-y-5"
         >
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Name"
-            className="w-full bg-slate-800 rounded-xl p-3 text-white"
-          />
 
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Bio"
-            rows={4}
-            className="w-full bg-slate-800 rounded-xl p-3 text-white"
-          />
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Name
+            </label>
 
-          <input
-            name="github"
-            value={formData.github}
-            onChange={handleChange}
-            placeholder="GitHub URL"
-            className="w-full bg-slate-800 rounded-xl p-3 text-white"
-          />
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Your name"
+              className="
+                w-full
+                rounded-xl
+                border border-slate-200
+                bg-slate-50
+                px-4 py-3
+                text-sm text-slate-900
+                placeholder:text-slate-400
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:bg-white
+                focus:ring-2
+                focus:ring-indigo-500/10
+              "
+            />
+          </div>
 
-          <input
-            name="linkedin"
-            value={formData.linkedin}
-            onChange={handleChange}
-            placeholder="LinkedIn URL"
-            className="w-full bg-slate-800 rounded-xl p-3 text-white"
-          />
+          {/* Bio */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Bio
+            </label>
 
+            <textarea
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              placeholder="Tell something about yourself..."
+              rows={4}
+              className="
+                w-full
+                resize-none
+                rounded-xl
+                border border-slate-200
+                bg-slate-50
+                px-4 py-3
+                text-sm text-slate-900
+                placeholder:text-slate-400
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:bg-white
+                focus:ring-2
+                focus:ring-indigo-500/10
+              "
+            />
+          </div>
+
+          {/* GitHub */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              GitHub
+            </label>
+
+            <input
+              name="github"
+              value={formData.github}
+              onChange={handleChange}
+              placeholder="https://github.com/username"
+              className="
+                w-full
+                rounded-xl
+                border border-slate-200
+                bg-slate-50
+                px-4 py-3
+                text-sm text-slate-900
+                placeholder:text-slate-400
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:bg-white
+                focus:ring-2
+                focus:ring-indigo-500/10
+              "
+            />
+          </div>
+
+          {/* LinkedIn */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              LinkedIn
+            </label>
+
+            <input
+              name="linkedin"
+              value={formData.linkedin}
+              onChange={handleChange}
+              placeholder="https://linkedin.com/in/username"
+              className="
+                w-full
+                rounded-xl
+                border border-slate-200
+                bg-slate-50
+                px-4 py-3
+                text-sm text-slate-900
+                placeholder:text-slate-400
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:bg-white
+                focus:ring-2
+                focus:ring-indigo-500/10
+              "
+            />
+          </div>
+
+          {/* Actions */}
           <div className="flex justify-end gap-3 pt-3">
 
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-slate-700 text-white"
+              className="
+                px-5 py-2.5
+                rounded-xl
+                border border-slate-200
+                bg-white
+                text-slate-700
+                text-sm
+                font-medium
+                hover:bg-slate-50
+                hover:border-slate-300
+                transition
+              "
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"
+              className="
+                px-5 py-2.5
+                rounded-xl
+                bg-indigo-600
+                text-white
+                text-sm
+                font-medium
+                hover:bg-indigo-700
+                shadow-sm
+                transition
+              "
             >
               Save Changes
             </button>
@@ -103,7 +220,6 @@ const EditProfileModal = ({
           </div>
 
         </form>
-
       </div>
     </div>
   );
