@@ -1,4 +1,5 @@
 import Bookmark from "./bookmark.model.js";
+import { escapeRegex } from "../../utils/escapeRegex.js";
 
 export const createBookmark = async (
   bookmarkData,
@@ -31,6 +32,9 @@ export const createBookmark = async (
 };
 
 export const getAllBookmarks = async (userId, search = "") => {
+
+  const escapedSearch = escapeRegex(search);
+
   const query = {
     owner: userId,
   };
@@ -39,33 +43,33 @@ export const getAllBookmarks = async (userId, search = "") => {
     query.$or = [
       {
         title: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         description: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         url: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         tags: {
           $elemMatch: {
-            $regex: search,
+            $regex: escapedSearch,
             $options: "i",
           },
         },
       },
       {
         type: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },

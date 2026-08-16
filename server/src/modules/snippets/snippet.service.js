@@ -1,4 +1,5 @@
 import Snippet from "./snippet.model.js";
+import { escapeRegex } from "../../utils/escapeRegex.js";
 
 export const createSnippet = async (snippetData, userId) => {
   const {
@@ -28,6 +29,9 @@ export const createSnippet = async (snippetData, userId) => {
 };
 
 export const getAllSnippets = async (userId, search = "") => {
+
+  const escapedSearch = escapeRegex(search);
+
   const query = {
     owner: userId,
   };
@@ -36,26 +40,26 @@ export const getAllSnippets = async (userId, search = "") => {
     query.$or = [
       {
         title: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         code: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         language: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         tags: {
           $elemMatch: {
-            $regex: search,
+            $regex: escapedSearch,
             $options: "i",
           },
         },

@@ -42,7 +42,14 @@ const AppRoutes = () => {
           }
         />
 
-        <Route path="/notes" element={<NotesPage />} />
+        <Route
+          path="/notes"
+          element={
+            <ProtectedRoute>
+              <NotesPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/projects"

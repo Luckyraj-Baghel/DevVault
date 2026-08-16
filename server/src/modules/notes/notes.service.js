@@ -1,5 +1,6 @@
 import Note from "./notes.model.js";
 import { generateSummary } from "../../utils/ai.js";
+import { escapeRegex } from "../../utils/escapeRegex.js";
 
 export const createNote = async (noteData, userId) => {
   const { title, content, tags, category, isPinned } = noteData;
@@ -21,6 +22,9 @@ export const createNote = async (noteData, userId) => {
 };
 
 export const getAllNotes = async (userId, search = "") => {
+
+  const escapedSearch = escapeRegex(search);
+
   const query = {
     owner: userId,
   };
@@ -29,20 +33,20 @@ export const getAllNotes = async (userId, search = "") => {
     query.$or = [
       {
         title: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         content: {
-          $regex: search,
+          $regex: escapedSearch,
           $options: "i",
         },
       },
       {
         tags: {
           $elemMatch: {
-            $regex: search,
+            $regex: escapedSearch,
             $options: "i",
           },
         },
@@ -72,12 +76,35 @@ export const getNoteById = async (noteId, userId) => {
 };
 
 export const updateNote = async (noteId, userId, updateData) => {
+  const {
+    title,
+    content,
+    tags,
+    category,
+    isPinned,
+  } = updateData;
+
+  const allowedUpdates = {
+    title,
+    content,
+    tags,
+    category,
+    isPinned,
+  };
+
+  // Remove undefined fields
+  Object.keys(allowedUpdates).forEach((key) => {
+    if (allowedUpdates[key] === undefined) {
+      delete allowedUpdates[key];
+    }
+  });
+
   const note = await Note.findOneAndUpdate(
     {
       _id: noteId,
       owner: userId,
     },
-    updateData,
+    allowedUpdates,
     {
       new: true,
       runValidators: true,

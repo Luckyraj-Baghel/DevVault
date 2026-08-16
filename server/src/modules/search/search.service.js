@@ -2,6 +2,7 @@ import Note from "../notes/notes.model.js";
 import Project from "../projects/project.model.js";
 import Snippet from "../snippets/snippet.model.js";
 import Bookmark from "../bookmarks/bookmark.model.js";
+import { escapeRegex } from "../../utils/escapeRegex.js";
 
 export const universalSearch = async (userId, query) => {
   if (!query) {
@@ -13,8 +14,10 @@ export const universalSearch = async (userId, query) => {
     };
   }
 
+  const escapedSearch = escapeRegex(query);
+
   const searchQuery = {
-    $regex: query,
+    $regex: escapedSearch,
     $options: "i",
   };
 

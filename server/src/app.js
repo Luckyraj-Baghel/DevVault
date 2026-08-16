@@ -10,9 +10,8 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://dev-vault-indol.vercel.app",
-];
+  process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(
   cors({

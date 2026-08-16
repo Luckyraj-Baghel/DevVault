@@ -53,12 +53,39 @@ export const updateProject = async (
   userId,
   updateData
 ) => {
+  const {
+    title,
+    description,
+    techStack,
+    githubLink,
+    liveLink,
+    features,
+    status,
+  } = updateData;
+
+  const allowedUpdates = {
+    title,
+    description,
+    techStack,
+    githubLink,
+    liveLink,
+    features,
+    status,
+  };
+
+  // Remove fields that were not provided
+  Object.keys(allowedUpdates).forEach((key) => {
+    if (allowedUpdates[key] === undefined) {
+      delete allowedUpdates[key];
+    }
+  });
+
   const project = await Project.findOneAndUpdate(
     {
       _id: projectId,
       owner: userId,
     },
-    updateData,
+    allowedUpdates,
     {
       new: true,
       runValidators: true,

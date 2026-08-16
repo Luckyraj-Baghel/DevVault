@@ -31,11 +31,6 @@ export const validateRegisterData = ({ name, email, password }) => {
 
   validatePassword(password);
 
-   {
-    throw new Error(
-      "Password must be at least 8 characters and include uppercase, lowercase, number and symbol"
-    );
-  }
 };
 
 export const validateProfileUpdate = (data) => {
