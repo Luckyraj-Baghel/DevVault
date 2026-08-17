@@ -34,10 +34,6 @@ export const registerUser = async (userData) => {
         password: hashedPassword,
     });
 
-    const userResponse = user.toObject();
-    delete userResponse.password;
-
-    return userResponse;
     return sanitizeUser(user);
 };
 
@@ -65,7 +61,7 @@ export const loginUser = async ({ email, password }) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: process.env.JWT_EXPIRES_IN,
+            expiresIn: process.env.JWT_EXPIRES_IN || "7d",
         }
     );
 
@@ -156,8 +152,10 @@ export const forgotPassword = async (email) => {
     email: email.toLowerCase().trim(),
   });
 
+  // Don't reveal whether the account exists — always behave the same way,
+  // so this endpoint can't be used to enumerate registered emails.
   if (!user) {
-    throw new Error("No account found with this email");
+    return true;
   }
 
   // Generate secure random token
