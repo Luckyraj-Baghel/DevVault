@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import LoadingScreen from "../components/LoadingScreen";
 
 const HomePage = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <p className="text-slate-500">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
