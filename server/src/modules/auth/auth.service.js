@@ -42,7 +42,7 @@ export const loginUser = async ({ email, password }) => {
         throw new Error("Email and password are required");
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).select("+password");
 
     if (!user) {
         throw new Error("Invalid email or password");

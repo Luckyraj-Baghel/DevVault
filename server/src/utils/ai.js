@@ -8,7 +8,7 @@ export const generateSummary = async (text) => {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "openrouter/free",
+        model: "mistralai/mistral-7b-instruct:free",
         messages: [
           {
             role: "system",

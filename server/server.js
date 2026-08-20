@@ -5,7 +5,6 @@ import app from "./src/app.js";
 import connectDB from "./src/config/db.js";
 
 const PORT = process.env.PORT || 5000;
-import "./src/utils/email.js";
 
 // Connect Database
 await connectDB();

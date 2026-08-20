@@ -4,27 +4,11 @@ import Snippet from "../snippets/snippet.model.js";
 import Bookmark from "../bookmarks/bookmark.model.js";
 
 export const getDashboardStats = async (userId) => {
-  const recentNotes = await Note.find({ owner: userId })
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .select("title category createdAt");
-
-  const recentProjects = await Project.find({ owner: userId })
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .select("title status createdAt");
-
-  const recentSnippets = await Snippet.find({ owner: userId })
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .select("title language createdAt");
-
-  const recentBookmarks = await Bookmark.find({ owner: userId })
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .select("title type createdAt");
-
   const [
+    recentNotes,
+    recentProjects,
+    recentSnippets,
+    recentBookmarks,
     totalNotes,
     totalProjects,
     totalSnippets,
@@ -35,64 +19,61 @@ export const getDashboardStats = async (userId) => {
     completedProjects,
     inProgressProjects,
   ] = await Promise.all([
-    Note.countDocuments({
-      owner: userId,
-    }),
+    Note.find({ owner: userId })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select("title category createdAt"),
 
-    Project.countDocuments({
-      owner: userId,
-    }),
+    Project.find({ owner: userId })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select("title status createdAt"),
 
-    Snippet.countDocuments({
-      owner: userId,
-    }),
+    Snippet.find({ owner: userId })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select("title language createdAt"),
 
-    Bookmark.countDocuments({
-      owner: userId,
-    }),
+    Bookmark.find({ owner: userId })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select("title type createdAt"),
 
-    Note.countDocuments({
-      owner: userId,
-      isPinned: true,
-    }),
+    Note.countDocuments({ owner: userId }),
 
-    Snippet.countDocuments({
-      owner: userId,
-      isFavorite: true,
-    }),
+    Project.countDocuments({ owner: userId }),
 
-    Bookmark.countDocuments({
-      owner: userId,
-      isFavorite: true,
-    }),
+    Snippet.countDocuments({ owner: userId }),
 
-    Project.countDocuments({
-      owner: userId,
-      status: "Completed",
-    }),
+    Bookmark.countDocuments({ owner: userId }),
 
-    Project.countDocuments({
-      owner: userId,
-      status: "In Progress",
-    }),
+    Note.countDocuments({ owner: userId, isPinned: true }),
+
+    Snippet.countDocuments({ owner: userId, isFavorite: true }),
+
+    Bookmark.countDocuments({ owner: userId, isFavorite: true }),
+
+    Project.countDocuments({ owner: userId, status: "Completed" }),
+
+    Project.countDocuments({ owner: userId, status: "In Progress" }),
   ]);
 
   return {
-  stats: {
-    totalNotes,
-    totalProjects,
-    totalSnippets,
-    totalBookmarks,
-    pinnedNotes,
-    favoriteSnippets,
-    favoriteBookmarks,
-    completedProjects,
-    inProgressProjects,
-  },
+    stats: {
+      totalNotes,
+      totalProjects,
+      totalSnippets,
+      totalBookmarks,
+      pinnedNotes,
+      favoriteSnippets,
+      favoriteBookmarks,
+      completedProjects,
+      inProgressProjects,
+    },
 
-  recentNotes,
-  recentProjects,
-  recentSnippets,
-  recentBookmarks,
-};
+    recentNotes,
+    recentProjects,
+    recentSnippets,
+    recentBookmarks,
+  };
 };
