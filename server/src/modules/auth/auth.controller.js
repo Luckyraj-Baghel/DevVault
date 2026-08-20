@@ -116,7 +116,7 @@ export const changePassword = async (req, res) => {
       .clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .status(200)
       .json({

@@ -91,12 +91,29 @@ export const updateSnippet = async (
   userId,
   updateData
 ) => {
+  const { title, code, language, description, tags, isFavorite } = updateData;
+
+  const allowedUpdates = {
+    title,
+    code,
+    language,
+    description,
+    tags,
+    isFavorite,
+  };
+
+  Object.keys(allowedUpdates).forEach((key) => {
+    if (allowedUpdates[key] === undefined) {
+      delete allowedUpdates[key];
+    }
+  });
+
   const snippet = await Snippet.findOneAndUpdate(
     {
       _id: snippetId,
       owner: userId,
     },
-    updateData,
+    allowedUpdates,
     {
       new: true,
       runValidators: true,

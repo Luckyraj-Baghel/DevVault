@@ -100,12 +100,29 @@ export const updateBookmark = async (
   userId,
   updateData
 ) => {
+  const { title, url, type, description, tags, isFavorite } = updateData;
+
+  const allowedUpdates = {
+    title,
+    url,
+    type,
+    description,
+    tags,
+    isFavorite,
+  };
+
+  Object.keys(allowedUpdates).forEach((key) => {
+    if (allowedUpdates[key] === undefined) {
+      delete allowedUpdates[key];
+    }
+  });
+
   const bookmark = await Bookmark.findOneAndUpdate(
     {
       _id: bookmarkId,
       owner: userId,
     },
-    updateData,
+    allowedUpdates,
     {
       new: true,
       runValidators: true,

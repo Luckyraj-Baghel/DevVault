@@ -63,6 +63,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+
+    portfolio: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
 
   {
